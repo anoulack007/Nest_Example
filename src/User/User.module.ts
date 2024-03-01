@@ -16,7 +16,6 @@ import { AddressSchema } from "./schema/Address.schema";
                 name:'Address',
                 schema:AddressSchema
             }
-
         ])
     ],
     providers:[UserService],

@@ -5,6 +5,10 @@ import { Address } from "./Address.schema";
 
 @Schema()
 export class User {
+
+    @Prop({default:mongoose.Types.ObjectId})
+    _id:string
+
     @Prop({required:true,default:'Mr Or Ms'})
     username: string;
 
@@ -19,6 +23,8 @@ export class User {
 
     @Prop({type:[{type:mongoose.Schema.Types.ObjectId, ref:'Address'}]})
     address: Address[];
+
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoosesConfigService } from './app.service';
 import { UserModule } from './User/User.module';
+import { AuthModule } from './auth/auth.module';
+
 
 @Module({
   imports: 
@@ -19,7 +21,8 @@ import { UserModule } from './User/User.module';
   MongooseModule.forRootAsync({
     useClass:MongoosesConfigService
   }),
-  UserModule
+  UserModule,
+  AuthModule,
   ],
   controllers: [],
   providers: [],
