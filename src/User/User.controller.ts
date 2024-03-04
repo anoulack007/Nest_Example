@@ -9,7 +9,7 @@ export class UserController {
     constructor(private userService:UserService){}
 
     @Post()
-    @UsePipes(new ValidationPipe())
+    // @UsePipes(new ValidationPipe())
     async createUser(@Body() createUserDto:CreateUserDto){
         console.log(createUserDto)
         return await this.userService.createUser(createUserDto)
@@ -34,19 +34,19 @@ export class UserController {
         return findUser
     }
 
-    // @Put(':id')
-    // @UsePipes(new ValidationPipe())
-    // async update(
-    //     @Param('id')id:string,
-    //     @Body() createUserDto:CreateUserDto,
-    //     ){
-    //     const update = await this.userService.updateUser(id,createUserDto)
+    @Put(':id')
+    async update(
+        @Param('id')id:string,
+        @Body() createUserDto:CreateUserDto,
+        ){
+        const update = await this.userService.updateUser(id,createUserDto)
 
-    //     return update
-    // }
+        return update
+    }
 
 
     //NOTE - delete
+    
     
     
 }

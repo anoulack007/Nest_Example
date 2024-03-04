@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Address } from './schema/Address.schema';
 import * as bcrypt from 'bcrypt'
 import { CreateAddressDto, CreateUserDto } from './dto/CreateUser.dto';
+import { UpdateUserDto } from './dto/UpdateUser.dto';
 
 
 
@@ -38,9 +39,9 @@ export class UserService {
   }
 
   //NOTE - Update
-//   async updateUser( id:string, createUserDto: CreateUserDto ){
-//     return await this.userModel.findByIdAndUpdate(id,createUserDto,{new:true})
-//   }
+  async updateUser( id:string, updateUserDto: UpdateUserDto ){
+    return await this.userModel.findByIdAndUpdate(id,updateUserDto,{new:true})
+  }
 
   //NOTE - deleteUser
   async deleteUser(id: string){

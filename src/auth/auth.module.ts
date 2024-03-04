@@ -6,6 +6,10 @@ import { UserSchema } from 'src/User/schema/User.schema';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './Strategy/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './Strategy/jwt.strategy';
+import { RefreshJwtStrategy } from './Strategy/refreshToken.startegy';
+import { UserService } from 'src/User/User.service';
+import { AddressSchema } from 'src/User/schema/Address.schema';
 
 
 
@@ -15,6 +19,10 @@ import { JwtModule } from '@nestjs/jwt';
       {
         name: 'User',
         schema: UserSchema
+      },
+      {
+        name:'Address',
+        schema:AddressSchema
       }
     ]),
     PassportModule,
@@ -25,6 +33,6 @@ import { JwtModule } from '@nestjs/jwt';
   ],
   
   controllers: [AuthController],
-  providers: [AuthService,LocalStrategy]
+  providers: [AuthService,LocalStrategy,JwtStrategy,UserService,RefreshJwtStrategy]
 })
 export class AuthModule {}
