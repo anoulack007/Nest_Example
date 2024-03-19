@@ -4,6 +4,7 @@ import { UserSchema } from "./schema/User.schema";
 import { UserService } from "./User.service";
 import { UserController } from "./User.controller";
 import { AddressSchema } from "./schema/Address.schema";
+import { SignUpDto } from "./dto/signup.dto";
 
 @Module({
     imports:[
@@ -18,7 +19,7 @@ import { AddressSchema } from "./schema/Address.schema";
             }
         ])
     ],
-    providers:[UserService],
+    providers:[UserService,SignUpDto],
     controllers:[UserController]
 })
 

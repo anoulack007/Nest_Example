@@ -6,15 +6,18 @@ import { UserSchema } from 'src/User/schema/User.schema';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './Strategy/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './Strategy/jwt.strategy';
-import { RefreshJwtStrategy } from './Strategy/refreshToken.startegy';
+// import { JwtStrategy } from './Strategy/jwt.strategy';
 import { UserService } from 'src/User/User.service';
 import { AddressSchema } from 'src/User/schema/Address.schema';
-
+import { SignUpDto } from 'src/User/dto/signup.dto';
+import { SignInDto } from 'src/User/dto/signin.dto';
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 
 @Module({
   imports:[
+
     MongooseModule.forFeature([
       {
         name: 'User',
@@ -25,14 +28,17 @@ import { AddressSchema } from 'src/User/schema/Address.schema';
         schema:AddressSchema
       }
     ]),
-    PassportModule,
+
+    PassportModule
+    ,
     JwtModule.register({
+      global:true,
       secret:process.env.ACCESS_TOKEN_SECRET,
       signOptions: {expiresIn: '1d'}
     }) 
   ],
   
   controllers: [AuthController],
-  providers: [AuthService,LocalStrategy,JwtStrategy,UserService,RefreshJwtStrategy]
+  providers: [AuthService,LocalStrategy,UserService,SignUpDto,SignInDto]
 })
 export class AuthModule {}

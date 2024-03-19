@@ -1,15 +1,20 @@
-import { Body, Controller, Get, HttpException, Param, Post, Put, UsePipes,ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, Param, Post, Put, UseGuards, UsePipes,ValidationPipe } from "@nestjs/common";
 import { UserService } from "./User.service";
 import { CreateAddressDto, CreateUserDto } from "./dto/CreateUser.dto";
+import { UpdateUserDto } from "./dto/UpdateUser.dto";
+import { SignUpDto } from "./dto/signup.dto";
+import { LocalAuthGuard } from "src/auth/guards/local-auth.guard";
+import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 
 
 
 @Controller('user')
 export class UserController {
-    constructor(private userService:UserService){}
+    constructor(private userService:UserService,
+            ){}
 
     @Post()
-    // @UsePipes(new ValidationPipe())
+    @UseGuards(JwtAuthGuard)
     async createUser(@Body() createUserDto:CreateUserDto){
         console.log(createUserDto)
         return await this.userService.createUser(createUserDto)
@@ -37,15 +42,13 @@ export class UserController {
     @Put(':id')
     async update(
         @Param('id')id:string,
-        @Body() createUserDto:CreateUserDto,
+        @Body() updateUserDto:UpdateUserDto,
         ){
-        const update = await this.userService.updateUser(id,createUserDto)
+        const update = await this.userService.updateUser(id,updateUserDto)
 
         return update
     }
 
-
-    //NOTE - delete
     
     
     

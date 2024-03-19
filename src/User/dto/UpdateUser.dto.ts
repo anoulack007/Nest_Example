@@ -10,13 +10,6 @@ export class UpdateUserDto {
     @IsOptional()
     lastName?: string;
   
-    @IsNotEmpty()
-    @IsString()
-    email: string;
-  
-    @IsNotEmpty()
-    @IsString()
-    password: string;
   
     @IsOptional()
     @IsString()

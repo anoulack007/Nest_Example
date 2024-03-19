@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/User.schema';
 import { Model } from 'mongoose';
@@ -6,6 +6,7 @@ import { Address } from './schema/Address.schema';
 import * as bcrypt from 'bcrypt'
 import { CreateAddressDto, CreateUserDto } from './dto/CreateUser.dto';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
+import { SignUpDto } from './dto/signup.dto';
 
 
 
@@ -14,11 +15,12 @@ export class UserService {
   constructor(
     @InjectModel('User') private userModel: Model<User>,
     @InjectModel('Address') private addressModel: Model<Address>,
-    
   ) {}
 
   //NOTE -  createUser(Create)
-  async createUser({ ...createUserDto }: CreateUserDto) {
+  async createUser(createUserDto: CreateUserDto) {
+
+    // const {username,email,password } = createUserDto
 
     const hash = await bcrypt.hash(createUserDto.password, 10);
 
@@ -66,4 +68,7 @@ export class UserService {
     });
     return newAddress;
   }
+
+
+
 }

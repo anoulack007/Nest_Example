@@ -1,36 +1,32 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from 'src/User/dto/CreateUser.dto';
-import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { UserService } from 'src/User/User.service';
-import { RefreshJwtGuard } from './guards/refresh-jwt-auth.guard';
+// import { RefreshJwtGuard } from './guards/refresh-jwt-auth.guard';
+import { SignUpDto } from 'src/User/dto/signup.dto';
+import { SignInDto } from 'src/User/dto/signin.dto';
 
 
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService,
-                private userService: UserService        
+    constructor(private authService: AuthService,     
         ){}
 
-    // @HttpCode(HttpStatus.OK)
-    @UseGuards(LocalAuthGuard)
-    @Post('login')
-    async signIn(@Body() createUserDto:CreateUserDto){
-        return this.authService.validateUser(createUserDto.username, createUserDto.password)
+    // @UseGuards(LocalAuthGuard)
+    @Post('signup')
+    signUp(@Body() signupDto: SignUpDto) {
+        return this.authService.signUp(signupDto)
+    }
+    
+    
+    // @UseGuards(LocalAuthGuard)
+    @Post('signin')
+    signIn(@Body() signinDto:SignInDto) {
+        return this.authService.signIn(signinDto)
     }
 
-    @Post('register')
-    async registerUser(@Body() createUserDto:CreateUserDto){
-        return await this.userService.createUser(createUserDto)
-    }
 
-    @UseGuards(RefreshJwtGuard)
-    @Post('refresh')
-    async refreshToken(@Request() req){
-        return this.authService.refreshToken(req._id)
-    }
+
 
 
 

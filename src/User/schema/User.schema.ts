@@ -1,18 +1,20 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { Address } from "./Address.schema";
 
 
 @Schema()
 export class User {
 
-    @Prop({default:mongoose.Types.ObjectId})
+    // @Prop({ default: () => new Types.ObjectId() })
+    // id: string;
+    @Prop({default: new mongoose.Types.ObjectId})
     _id:string
 
     @Prop({required:true,default:'Mr Or Ms'})
     username: string;
 
-    @Prop({required:true})
+    @Prop({default:'lastName'})
     lastName: string;
 
     @Prop({unique:true,default:'demo@gmail.com'})
