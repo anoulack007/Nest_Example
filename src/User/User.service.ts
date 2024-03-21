@@ -1,12 +1,13 @@
-import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import {  HttpException, Injectable, ParseFilePipeBuilder } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/User.schema';
 import { Model } from 'mongoose';
 import { Address } from './schema/Address.schema';
+import { Express } from 'express';
 import * as bcrypt from 'bcrypt'
 import { CreateAddressDto, CreateUserDto } from './dto/CreateUser.dto';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
-import { SignUpDto } from './dto/signup.dto';
+import multer from 'multer';
 
 
 
@@ -15,6 +16,7 @@ export class UserService {
   constructor(
     @InjectModel('User') private userModel: Model<User>,
     @InjectModel('Address') private addressModel: Model<Address>,
+
   ) {}
 
   //NOTE -  createUser(Create)
@@ -42,6 +44,7 @@ export class UserService {
 
   //NOTE - Update
   async updateUser( id:string, updateUserDto: UpdateUserDto ){
+    
     return await this.userModel.findByIdAndUpdate(id,updateUserDto,{new:true})
   }
 
@@ -63,12 +66,17 @@ export class UserService {
 
     await findUser.updateOne({
       $push: {
-        address: newAddress._id,
+        picture: newAddress._id,
       },
     });
     return newAddress;
   }
 
+
+  // //NOTE - function Picture
+
+
+  
 
 
 }

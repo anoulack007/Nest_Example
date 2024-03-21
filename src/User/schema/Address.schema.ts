@@ -4,7 +4,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 @Schema()
 export class Address {
     @Prop({required:true ,default:'Province'})
-    province:string
+    picture:string
 
     @Prop({default:'District'})
     district:string

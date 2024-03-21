@@ -8,8 +8,11 @@ export class User {
 
     // @Prop({ default: () => new Types.ObjectId() })
     // id: string;
-    @Prop({default: new mongoose.Types.ObjectId})
-    _id:string
+    // @Prop({default: new mongoose.Types.ObjectId})
+    // _id: string
+
+    @Prop()
+    avatar:string
 
     @Prop({required:true,default:'Mr Or Ms'})
     username: string;

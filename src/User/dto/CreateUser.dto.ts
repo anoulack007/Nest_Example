@@ -27,6 +27,10 @@ export class CreateUserDto {
 
 
 export class CreateAddressDto {
+
+  // @IsString()
+  // @IsOptional()
+  // picture:string
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)

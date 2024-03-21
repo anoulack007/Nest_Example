@@ -13,37 +13,27 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/User/User.service';
 import { SignUpDto } from 'src/User/dto/signup.dto';
 import { SignInDto } from 'src/User/dto/signin.dto';
-import { access } from 'fs';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel('User') private userModel: Model<User>,
     private jwtService: JwtService,
-
+    private configService: ConfigService,
   ) {}
 
-  async validateUser(signinDto: SignInDto): Promise<any> {
-    const {email, password} = signinDto
-    console.log(email,password)
-
-    const user = await this.userModel.findOne({ email });
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const {...result } = user;
-      return result;
-    }
-
-    return null;
-  }
-
-  async signUp(signUpDto: SignUpDto) {
+  //NOTE - register
+  async signUp(signUpDto: SignUpDto, file:string) {
     try {
-      const { username, password,email } = signUpDto;
+      const { username, password, email ,} = signUpDto;
 
-      console.log({ username, password })
+
+      console.log({ username, password });
       const hashPassword = await bcrypt.hash(password, 10);
 
       const user = this.userModel.create({
+        avatar:file,
         username,
         email,
         password: hashPassword,
@@ -56,37 +46,33 @@ export class AuthService {
     }
   }
 
+  //NOTE - function Login
   async signIn(signinDto: SignInDto) {
+    const { email, password } = signinDto;
 
-    const {email,password} = signinDto
-
-    const user = await this.userModel.findOne({email});
+    const user = await this.userModel.findOne({ email });
 
     if (!user) {
       console.error('Invalid user:', user);
       throw new BadRequestException('Invalid user');
     }
 
-    
     if (user) {
       // console.log(user);
-      
-      const isMatch = await bcrypt.compare(password,user.password);
-      
+
+      const isMatch = await bcrypt.compare(password, user.password);
+
       // console.log(isMatch);
-      
+
       if (isMatch === false) {
         throw new UnauthorizedException('Invalid credentials');
       }
     }
 
-    console.log(user);
-    
     const payload = {
       email: user.email,
       sub: user._id,
     };
-    console.log(payload)
 
     const access_token = await this.jwtService.signAsync(payload);
 
@@ -96,10 +82,35 @@ export class AuthService {
     });
 
     return { access_token, refresh_token };
+  }
 
-    // return{
-    //   accessToken:this.jwtService.sign(payload),
-    //   refreshToken:this.jwtService.sign(payload)
-    // }
+  //NOTE POST /auth/refresh
+  async refreshAccessToken(refreshToken: any) {
+
+    const refresh = refreshToken.payload;
+
+    const payload = this.jwtService.verify(refresh, {
+      secret: this.configService.get('REFRESH_TOKEN_SECRET'),
+    });
+
+
+    const newAccessToken = await this.jwtService.signAsync({
+      email: payload.email,
+      sub: payload.sub,
+    });
+
+    const newRefreshToken = await this.jwtService.signAsync(
+      { email: payload.email, sub: payload.sub },
+      {
+        secret: this.configService.get('REFRESH_TOKEN_SECRET'),
+        expiresIn: '1d',
+      },
+    );
+
+
+    return {
+      newAccessToken,
+      newRefreshToken,
+    };
   }
 }

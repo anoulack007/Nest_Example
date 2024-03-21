@@ -1,13 +1,12 @@
 import { IsNotEmpty, IsOptional, IsString, Matches } from "class-validator";
 
 export class SignUpDto {
+    
+    @IsOptional()
+    avatar?: string
 
     @IsNotEmpty()
     username: string
-
-    @IsString()
-    @IsOptional()
-    lastName?: string;
 
     @IsString()
     @IsOptional()
