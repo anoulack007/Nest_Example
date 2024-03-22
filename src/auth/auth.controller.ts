@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from 'src/User/dto/signup.dto';
 import { SignInDto } from 'src/User/dto/signin.dto';
@@ -35,4 +35,49 @@ export class AuthController {
   refresh(@Body() refreshToken: any) {
     return this.authService.refreshAccessToken(refreshToken);
   }
+
+
+
+  // @Post('email/reset-password')
+  // @HttpCode(HttpStatus.OK)
+  // public async setNewPassword(
+  //   @Body() resetPassword:ResetPasswordDto
+  // ): Promise<IResponse> {
+  //   try{
+  //     var isNewPasswordChanged: boolean = false;
+  //     if(resetPassword.email && resetPassword.currentPassword){
+  //       const isValidPassword = await this.authService.checkPassword(
+  //         resetPassword.email,
+  //         resetPassword.currentPassword
+  //       );
+  //       if(isValidPassword){
+  //         isNewPasswordChanged = await this.userService.setPassword(
+  //           resetPassword.email,
+  //           resetPassword.newPassword
+  //         )}else {
+  //           return new ResponseError("RESET_PASSWORD.WRONG_CURRENT_PASSWORD")
+  //         }
+
+        
+  //     }else if(resetPassword.newPasswordToken){
+  //       const forgottenPasswordModel = await this.authService.getForgottenPasswordModel(
+  //         resetPassword.newPasswordToken
+  //       );
+  //       isNewPasswordChanged = await this.userService.setPassword(
+  //         forgottenPasswordModel.email,
+  //         resetPassword.newPassword
+  //       )
+  //       if(isNewPasswordChanged) await forgottenPasswordModel.remove()
+  //     }else{
+  //       return new ResponseError("RESET_PASSWORD.CHANGE_PASSWORD_ERROR")
+  //     }
+  //     return new ResponseSuccess(
+  //       "RESET_PASSWORD.PASSWORD_CHANGED",
+  //       isNewPasswordChanged
+  //     )
+
+  //   }catch(error){
+  //     return new ResponseError("RESET_PASSWORD.CHANGE_PASSWORD_ERROE", error)
+  //   }
+  // }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseFilePipeBuilder, Post, Put, Res, UploadedFile, UseGuards, UseInterceptors, UsePipes,ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseFilePipeBuilder, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors, UsePipes,ValidationPipe } from "@nestjs/common";
 import { UserService } from "./User.service";
 import { CreateAddressDto, CreateUserDto } from "./dto/CreateUser.dto";
 import { UpdateUserDto } from "./dto/UpdateUser.dto";
@@ -8,6 +8,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
 import { callbackify } from "util";
+import { Request } from "express";
 
 
 
@@ -34,8 +35,10 @@ export class UserController {
 
 
     @Get()
-    async getUser(){
+    async getUser(@Req() req:Request){
+        console.log(req.user)
         return await this.userService.getUsers();
+        
     }
 
  

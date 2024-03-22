@@ -22,15 +22,16 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    // try {
+    try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.ACCESS_TOKEN_SECRET,
       });
-      console.log(payload)
+      
       request['user'] = payload;
-    // } catch (err) {
-    //   throw new HttpException(err, 401);
-    // }
+      
+    } catch (err) {
+      throw new HttpException(err, 401);
+    }
 
     return true;
   }

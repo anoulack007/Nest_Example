@@ -11,7 +11,7 @@ import multer from 'multer';
 
 
 
-@Injectable()
+ @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private userModel: Model<User>,

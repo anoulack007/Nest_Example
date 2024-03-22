@@ -46,6 +46,11 @@ export class AuthService {
     }
   }
 
+  /**
+   * 
+   * @param signinDto 
+   * @returns 
+   */
   //NOTE - function Login
   async signIn(signinDto: SignInDto) {
     const { email, password } = signinDto;
@@ -76,6 +81,7 @@ export class AuthService {
 
     const access_token = await this.jwtService.signAsync(payload);
 
+    //FIXME - expires in .env
     const refresh_token = await this.jwtService.signAsync(payload, {
       expiresIn: '24h',
       secret: process.env.REFRESH_TOKEN_SECRET,
@@ -113,4 +119,13 @@ export class AuthService {
       newRefreshToken,
     };
   }
+
+
+  // async getForgottenPasswordModel(
+  //   newPasswordToken:string
+  // ):Promise<ForgettenPassword>{
+  //   return await this.getForgottenPasswordModel.findOne({
+  //     newPasswordToken: newPasswordToken
+  //   })
+  // }
 }
