@@ -37,8 +37,8 @@ export class AuthService {
    * @returns
    */
   //NOTE - register
-  async signUp(signUpDto: SignUpDto, file: any) {
-    
+  async signUp(signUpDto: SignUpDto, file:any) {
+    let imageName:[]
     const {
       username,
       password,
@@ -49,12 +49,16 @@ export class AuthService {
       address,
     } = signUpDto;
 
+    console.log(imageName)
+
     const hashPassword = await bcrypt.hash(password, 10);
 
     const findEmail = await this.userModel.findOne({ email });
     if (findEmail) {
       throw new BadRequestException('Email Ready exist');
     }
+
+
 
     const user = await this.userModel.create({
       avatar: file?.originalname ? file?.originalname : undefined,
