@@ -8,6 +8,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
+
 //NOTE - verify token
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -17,7 +18,7 @@ export class JwtAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
 
     const token = this.extractTokenFromHeader(request);
-  
+
     if (!token) {
       throw new UnauthorizedException();
     }

@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MongoosesConfigService } from './app.service';
 import { UserModule } from './User/User.module';
 import { AuthModule } from './auth/auth.module';
+import { ProfileModule } from './profile/profile.module';
 
 
 @Module({
@@ -23,6 +24,7 @@ import { AuthModule } from './auth/auth.module';
   }),
   UserModule,
   AuthModule,
+  ProfileModule,
   ],
   controllers: [],
   providers: [],

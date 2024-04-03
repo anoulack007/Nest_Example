@@ -1,13 +1,10 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseFilePipeBuilder, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors, UsePipes,ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Res, UploadedFile, UseGuards, UseInterceptors} from "@nestjs/common";
 import { UserService } from "./User.service";
-import { CreateAddressDto, CreateUserDto } from "./dto/CreateUser.dto";
-import { UpdateUserDto } from "./dto/UpdateUser.dto";
-import { SignUpDto } from "./dto/signup.dto";
+// import { UpdateUserDto } from "./dto/UpdateUser.dto";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
-import { callbackify } from "util";
 import { Request } from "express";
 
 
@@ -20,23 +17,16 @@ export class UserController {
 
             ){}
 
-    @Post()
-    async createUser(@Body() createUserDto:CreateUserDto){
-        console.log(createUserDto)
-        return await this.userService.createUser(createUserDto)
-    }
-
-
-    @Post('address')
-    async createAddress(@Body() createAddressDto:CreateAddressDto){
-        console.log(createAddressDto);
-        return this.userService.createAddress(createAddressDto)
-    }
+    // @Post()
+    // async createUser(@Body() createUserDto:CreateUserDto){
+    //     console.log(createUserDto)
+    //     return await this.userService.createUser(createUserDto)
+    // }
 
 
     @Get()
-    async getUser(@Req() req:Request){
-        console.log(req.user)
+    async getUser(@Body() req:Request){
+        // console.log(req.user)
         return await this.userService.getUsers();
         
     }
@@ -51,15 +41,15 @@ export class UserController {
     }
 
 
-    @Put(':id')
-    async update(
-        @Param('id')id:string,
-        @Body() updateUserDto:UpdateUserDto,
-        ){
-        const update = await this.userService.updateUser(id,updateUserDto)
+    // @Put(':id')
+    // async update(
+    //     @Param('id')id:string,
+    //     @Body() updateUserDto:UpdateUserDto,
+    //     ){
+    //     const update = await this.userService.updateUser(id,updateUserDto)
 
-        return update
-    }
+    //     return update
+    // }
 
     @Delete(':id')
     async remove(

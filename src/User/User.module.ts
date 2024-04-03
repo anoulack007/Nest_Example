@@ -3,8 +3,10 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { UserSchema } from "./schema/User.schema";
 import { UserService } from "./User.service";
 import { UserController } from "./User.controller";
-import { AddressSchema } from "./schema/Address.schema";
 import { SignUpDto } from "./dto/signup.dto";
+import { ProfileSchema,Profile } from "src/profile/schemas/profile.schema";
+import { ProfileService } from "src/profile/profile.service";
+
 
 @Module({
     imports:[
@@ -14,8 +16,8 @@ import { SignUpDto } from "./dto/signup.dto";
                 schema:UserSchema
             },
             {
-                name:'Address',
-                schema:AddressSchema
+                name:"Profile",
+                schema:ProfileSchema
             }
         ])
     ],

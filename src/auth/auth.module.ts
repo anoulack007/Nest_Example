@@ -8,10 +8,14 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
 import { UserService } from 'src/User/User.service';
-import { AddressSchema } from 'src/User/schema/Address.schema';
 import { SignUpDto } from 'src/User/dto/signup.dto';
 import { SignInDto } from 'src/User/dto/signin.dto';
 import * as dotenv from 'dotenv';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as path from 'path';
+import { ProfileSchema } from 'src/profile/schemas/profile.schema';
+import { ProfileService } from 'src/profile/profile.service';
 
 dotenv.config();
 
@@ -23,12 +27,25 @@ dotenv.config();
         schema: UserSchema,
       },
       {
-        name: 'Address',
-        schema: AddressSchema,
-      },
+        name:"Profile",
+        schema:ProfileSchema
+    },
     ]),
+    MulterModule.registerAsync({
+      useFactory:() =>({
+        storage:diskStorage({
+          destination:"./src/images",
+          filename:(req,file, callBack)=>{
+              const fileName = path.parse(file.originalname).name.replace(/\s/g,'')+Date.now();
+              const extension = path.parse(file.originalname).ext;
+              callBack(null, `${fileName}${extension}`);
+          }
+      })
+      }),
+   
+    }),
 
-    PassportModule,
+    // PassportModule,
     JwtModule.register({
       global: true,
       secret: process.env.ACCESS_TOKEN_SECRET,
@@ -40,6 +57,7 @@ dotenv.config();
   providers: [
     AuthService,
     UserService,
+    ProfileService,
     SignUpDto,
     SignInDto,
     // {

@@ -1,13 +1,10 @@
-import {  HttpException, Injectable, ParseFilePipeBuilder } from '@nestjs/common';
+import {  Injectable  } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/User.schema';
 import { Model } from 'mongoose';
-import { Address } from './schema/Address.schema';
-import { Express } from 'express';
-import * as bcrypt from 'bcrypt'
-import { CreateAddressDto, CreateUserDto } from './dto/CreateUser.dto';
-import { UpdateUserDto } from './dto/UpdateUser.dto';
-import multer from 'multer';
+import { Profile } from 'src/profile/schemas/profile.schema';
+// import { CreateUserDto } from './dto/CreateUser.dto';
+
 
 
 
@@ -15,21 +12,26 @@ import multer from 'multer';
 export class UserService {
   constructor(
     @InjectModel('User') private userModel: Model<User>,
-    @InjectModel('Address') private addressModel: Model<Address>,
+    @InjectModel('Profile') private profileModel: Model<Profile>,
 
   ) {}
 
   //NOTE -  createUser(Create)
-  async createUser(createUserDto: CreateUserDto) {
+  // async createUser(createUserDto: CreateUserDto) {
 
-    // const {username,email,password } = createUserDto
+  //   // const profileResult = await this.profileService.findOne(
+  //   //   createUserDto.profileId,
+  //   // )
+  //   // if(!profileResult){
+  //   //   throw new NotFoundException('Profile not found');
+  //   // }
 
-    const hash = await bcrypt.hash(createUserDto.password, 10);
+  //   const hash = await bcrypt.hash(createUserDto.password, 10);
 
-    const newUser = await this.userModel.create({ ...createUserDto,password:hash  });
+  //   const newUser = await this.userModel.create({ createUserDto,password:hash  });
     
-    return newUser;
-  }
+  //   return newUser;
+  // }
 
 
   //NOTE - Read
@@ -42,11 +44,7 @@ export class UserService {
     return await this.userModel.findById(id).populate(['address'])
   }
 
-  //NOTE - Update
-  async updateUser( id:string, updateUserDto: UpdateUserDto ){
-    
-    return await this.userModel.findByIdAndUpdate(id,updateUserDto,{new:true})
-  }
+
 
   //NOTE - deleteUser
   async deleteUser(id: string){
@@ -54,26 +52,24 @@ export class UserService {
   }
 
   //NOTE - service about createAddress Array(relation one to many)
-  async createAddress({ userId, ...createAddressDto }: CreateAddressDto) {
-    const findUser = await this.userModel.findById(userId);
+  // async createAddress({ userId, ...createAddressDto }: CreateAddressDto) {
+    
+  //   const findUser = await this.userModel.findById(userId);
 
-    if (!findUser) throw new HttpException('User Not Found', 404);
+  //   if (!findUser) throw new HttpException('User Not Found', 404);
 
-    const newAddress = await this.addressModel.create({
-      ...createAddressDto,
-      userId,
-    });
+  //   const newAddress = await this.addressModel.create({
+  //     ...createAddressDto,
+  //     userId,
+  //   });
 
-    await findUser.updateOne({
-      $push: {
-        picture: newAddress._id,
-      },
-    });
-    return newAddress;
-  }
-
-
-  // //NOTE - function Picture
+  //   await findUser.updateOne({
+  //     $push: {
+  //       picture: newAddress._id,
+  //     },
+  //   });
+  //   return newAddress;
+  // }
 
 
   

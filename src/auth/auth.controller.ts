@@ -1,30 +1,34 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from 'src/User/dto/signup.dto';
 import { SignInDto } from 'src/User/dto/signin.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import * as path from 'path';
+import { PasswordDto } from 'src/User/dto/password.dto';
+import { Request } from 'express';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('signup')
-  @UseInterceptors(FileInterceptor('image',{
-    storage:diskStorage({
-        destination:"./src/Images",
-        filename:(req,file, callBack)=>{
-            const fileName = path.parse(file.originalname).name.replace(/\s/g,'')+Date.now();
-            const extension = path.parse(file.originalname).ext;
-            callBack(null, `${fileName}${extension}`);
-        }
-    })
-}))
-  signUp(@Body()  signupDto: SignUpDto,@UploadedFile() file) {
-    console.log(file)
-    return this.authService.signUp(signupDto,file.originalname);
-  }
+  
+    @Post('signup')
+    @UseInterceptors(FileInterceptor('image',{}))
+    signUp(
+      @Body()  signupDto: SignUpDto,
+      // @Body() createProfileDto:CreateProfileDto,
+      @UploadedFile() file) {
+      return this.authService.signUp(signupDto,file);
+    }
 
   @Post('signin')
   signIn(@Body() signinDto: SignInDto) {
@@ -37,6 +41,12 @@ export class AuthController {
   }
 
 
+  @UseGuards(JwtAuthGuard)
+  @Post('change')
+  async changePass(@Req() req: Request, @Body() passwordDto: PasswordDto) {
+    const change = await this.authService.ChangePassword(req, passwordDto);
+    return change;
+  }
 
   // @Post('email/reset-password')
   // @HttpCode(HttpStatus.OK)
@@ -58,7 +68,6 @@ export class AuthController {
   //           return new ResponseError("RESET_PASSWORD.WRONG_CURRENT_PASSWORD")
   //         }
 
-        
   //     }else if(resetPassword.newPasswordToken){
   //       const forgottenPasswordModel = await this.authService.getForgottenPasswordModel(
   //         resetPassword.newPasswordToken

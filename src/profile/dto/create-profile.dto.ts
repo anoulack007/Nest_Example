@@ -1,10 +1,8 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
-export class SignUpDto {
+export class CreateProfileDto {
 
-    @IsOptional()
-    userId:string
-
+    
     @IsString()//ກວດສອບວ່າເປັນສະຕີງ
     readonly firstName:string
 
@@ -20,13 +18,15 @@ export class SignUpDto {
     @IsString()
     readonly address:string
 
+
     @IsOptional()
     @IsString()
     readonly image:string
-    
+//schema user------
     @IsOptional()
     avatar?: string
 
+    @IsOptional()
     @IsNotEmpty()
     username: string
 
@@ -37,4 +37,5 @@ export class SignUpDto {
     @IsNotEmpty()
     @IsString()
     password: string
+
 }
