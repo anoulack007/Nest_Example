@@ -8,9 +8,6 @@ export class User {
   // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true })
   // profileId: Types.ObjectId;
 
-  @Prop()
-  avatar: string;
-
   @Prop({ required: true, default: 'Mr Or Ms' })
   username: string;
 

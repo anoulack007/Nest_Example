@@ -19,7 +19,7 @@ import { ProfileService } from "src/profile/profile.service";
                 name:"Profile",
                 schema:ProfileSchema
             }
-        ])
+        ]),
     ],
     providers:[UserService,SignUpDto],
     controllers:[UserController]

@@ -14,7 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { PasswordDto } from 'src/User/dto/password.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
+
 
 @Controller('auth')
 export class AuthController {

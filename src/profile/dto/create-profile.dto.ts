@@ -21,7 +21,7 @@ export class CreateProfileDto {
 
     @IsOptional()
     @IsString()
-    readonly image:string
+    image:string
 //schema user------
     @IsOptional()
     avatar?: string

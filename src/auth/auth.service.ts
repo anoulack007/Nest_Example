@@ -18,7 +18,6 @@ import { Profile } from 'src/profile/schemas/profile.schema';
 import { ProfileService } from 'src/profile/profile.service';
 import { SignUpDto } from 'src/User/dto/signup.dto';
 
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -37,19 +36,11 @@ export class AuthService {
    * @returns
    */
   //NOTE - register
-  async signUp(signUpDto: SignUpDto, file:any) {
-    let imageName:[]
-    const {
-      username,
-      password,
-      email,
-      firstName,
-      lastName,
-      age,
-      address,
-    } = signUpDto;
+  async signUp(signUpDto: SignUpDto, file: any) {
+    let imageName: [];
+    const { username, password, email, firstName, lastName, age, address } =
+      signUpDto;
 
-    console.log(imageName)
 
     const hashPassword = await bcrypt.hash(password, 10);
 
@@ -58,10 +49,7 @@ export class AuthService {
       throw new BadRequestException('Email Ready exist');
     }
 
-
-
     const user = await this.userModel.create({
-      avatar: file?.originalname ? file?.originalname : undefined,
       username,
       email,
       password: hashPassword,
@@ -69,17 +57,20 @@ export class AuthService {
 
     const profile = await this.profileModel.create({
       userId: user._id,
+      avatar: file?.originalname ? file?.originalname : undefined,
       firstName,
       lastName,
       age,
       address,
       email,
-      image: file?.originalname ? file?.originalname : undefined,
+      // image: file?.originalname ? file?.originalname : undefined,
     });
 
     return { user, profile };
   }
 
+
+  
   /**
    *
    * @param signinDto
@@ -89,30 +80,29 @@ export class AuthService {
   async signIn(signinDto: SignInDto) {
     const { username, password, email } = signinDto;
 
-    let data:any
+    let data: any;
 
-    data = await this.userModel.findOne({ $or:[{username},{email}] });
+    data = await this.userModel.findOne({ $or: [{ username }, { email }] });
     // if(!data){  data = await this.userModel.findOne({ email });}
 
-    
     if (!data) {
       console.error('Invalid user:', data);
       throw new BadRequestException('Invalid user');
     }
 
-      const isMatch = await bcrypt.compare(password, data.password);
+    const isMatch = await bcrypt.compare(password, data.password);
 
-      if (isMatch === false) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
+    if (isMatch === false) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
     const payload = {
-      email: data.email ,
+      email: data.email,
       sub: data._id,
     };
 
     const access_token = await this.jwtService.signAsync(payload);
-  
+
     //FIXME - fixleo - expires in .env
     const refresh_token = await this.jwtService.signAsync(payload, {
       expiresIn: process.env.EXPIRES,
@@ -120,7 +110,6 @@ export class AuthService {
     });
 
     return { access_token, refresh_token };
-
   }
 
   //NOTE POST /auth/refresh
