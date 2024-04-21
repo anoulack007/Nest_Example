@@ -19,14 +19,14 @@ export class Profile {
   @Prop({ default: 'address' })
   address: string;
 
-  @Prop()
-  avatar: string;
+  @Prop({})
+  avatar?: string;
 
   @Prop({ default: 'email you' })
   email: string;
 
   @Prop({ default: 'image' })
-  image: string[];
+  images: string[];
 
   @Prop({default:Date.now})
   createdAt:Date

@@ -16,23 +16,6 @@ export class UserService {
 
   ) {}
 
-  //NOTE -  createUser(Create)
-  // async createUser(createUserDto: CreateUserDto) {
-
-  //   // const profileResult = await this.profileService.findOne(
-  //   //   createUserDto.profileId,
-  //   // )
-  //   // if(!profileResult){
-  //   //   throw new NotFoundException('Profile not found');
-  //   // }
-
-  //   const hash = await bcrypt.hash(createUserDto.password, 10);
-
-  //   const newUser = await this.userModel.create({ createUserDto,password:hash  });
-    
-  //   return newUser;
-  // }
-
 
   //NOTE - Read
   async getUsers(){
@@ -50,29 +33,5 @@ export class UserService {
   async deleteUser(id: string){
     return await this.userModel.findByIdAndDelete(id);
   }
-
-  //NOTE - service about createAddress Array(relation one to many)
-  // async createAddress({ userId, ...createAddressDto }: CreateAddressDto) {
-    
-  //   const findUser = await this.userModel.findById(userId);
-
-  //   if (!findUser) throw new HttpException('User Not Found', 404);
-
-  //   const newAddress = await this.addressModel.create({
-  //     ...createAddressDto,
-  //     userId,
-  //   });
-
-  //   await findUser.updateOne({
-  //     $push: {
-  //       picture: newAddress._id,
-  //     },
-  //   });
-  //   return newAddress;
-  // }
-
-
-  
-
 
 }

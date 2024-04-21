@@ -22,7 +22,7 @@ export class SignUpDto {
 
     @IsOptional()
     @IsString()
-    readonly image:string
+    readonly images:string
     
     @IsOptional()
     avatar?: string

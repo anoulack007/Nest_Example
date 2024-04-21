@@ -17,39 +17,6 @@ export class UserController {
 
             ){}
 
-    // @Post()
-    // async createUser(@Body() createUserDto:CreateUserDto){
-    //     console.log(createUserDto)
-    //     return await this.userService.createUser(createUserDto)
-    // }
-
-
-    @Get()
-    async getUser(@Body() req:Request){
-        // console.log(req.user)
-        return await this.userService.getUsers();
-        
-    }
-
- 
-    @Get(':id')
-    async getUserId(@Param('id') id:string){
-        const findUser = await this.userService.getUserById(id);
-
-        if(!findUser) throw new HttpException('User not found',404);
-        return findUser
-    }
-
-
-    // @Put(':id')
-    // async update(
-    //     @Param('id')id:string,
-    //     @Body() updateUserDto:UpdateUserDto,
-    //     ){
-    //     const update = await this.userService.updateUser(id,updateUserDto)
-
-    //     return update
-    // }
 
     @Delete(':id')
     async remove(

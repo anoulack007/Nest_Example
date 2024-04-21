@@ -37,16 +37,20 @@ export class AuthService {
    */
   //NOTE - register
   async signUp(signUpDto: SignUpDto, file: any) {
-    let imageName: [];
+
     const { username, password, email, firstName, lastName, age, address } =
       signUpDto;
 
 
     const hashPassword = await bcrypt.hash(password, 10);
 
-    const findEmail = await this.userModel.findOne({ email });
-    if (findEmail) {
-      throw new BadRequestException('Email Ready exist');
+    const findEmail = await this.userModel.findOne({ $and: [{email},{username}]});
+    // if (findEmail) {
+    //   throw new BadRequestException('Email or username Ready exist');
+    // }
+
+    if(file && findEmail){
+      throw new BadRequestException('Email or username Ready exist');
     }
 
     const user = await this.userModel.create({
@@ -66,7 +70,7 @@ export class AuthService {
       // image: file?.originalname ? file?.originalname : undefined,
     });
 
-    return { user, profile };
+    return [{ user, profile }];
   }
 
 

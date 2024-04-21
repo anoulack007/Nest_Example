@@ -22,10 +22,9 @@ export class AuthController {
 
   
     @Post('signup')
-    @UseInterceptors(FileInterceptor('image',{}))
+    @UseInterceptors(FileInterceptor('avatar',{}))
     signUp(
       @Body()  signupDto: SignUpDto,
-      // @Body() createProfileDto:CreateProfileDto,
       @UploadedFile() file) {
       return this.authService.signUp(signupDto,file);
     }
