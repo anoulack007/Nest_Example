@@ -55,35 +55,6 @@ export class ProfileService {
     return PicMany;
   }
 
-  /**
-   *
-   * @param request
-   * @param file
-   * @returns
-   */
-  //NOTE - Update Avatar Profile
-  async updateAvatar(request: any, file: Express.Multer.File) {
-    const data = request.user;
-
-    const findID = await this.profileModel.findOne({
-      $or: [{ userId: data.sub }, { email: data.email }],
-    });
-
-    if (!findID) {
-      console.error('Invalid Images:', findID);
-      throw new BadRequestException('Invalid Images');
-    }
-
-    const updateAvatar = await this.profileModel.findByIdAndUpdate(
-      { _id: findID._id },
-      {
-        avatar: file?.originalname ? file?.originalname : undefined,
-      },
-      { new: true },
-    );
-
-    return updateAvatar;
-  }
 
   //NOTE - Create Profile
   // async create(userId: string, createProfileDto: CreateProfileDto) {
@@ -98,9 +69,7 @@ export class ProfileService {
   //NOTE - FInd All
   async findAll() {
     return await this.profileModel.find();
-
   }
-
 
   //NOTE - findOne
   async findOne(request: any) {
@@ -111,13 +80,13 @@ export class ProfileService {
   }
 
   //NOTE - update
-  async update(request: any, updateProfileDto: UpdateProfileDto,files:any) {
+  async update(request: any, updateProfileDto: UpdateProfileDto, files: any) {
     const data = request.user;
     const images = [];
-    const avatar = files.avatar
-    
-    const { firstName, lastName, age, address} =
-      updateProfileDto;
+    const avatar = files.avatar;
+    const avatar1 = avatar[0].originalname;
+
+    const { firstName, lastName, age, address } = updateProfileDto;
 
     const findData = await this.profileModel.findOne({
       $or: [{ userId: data.sub }, { email: data.email }],
@@ -129,50 +98,44 @@ export class ProfileService {
     for (const i of files.images) {
       images.push(i.originalname);
     }
-    console.log(avatar)
-    console.log(images)
 
-    // const update = await this.profileModel.findByIdAndUpdate(
-    //   { _id: findData._id },
-    //   {
-    //     // avatar,
-    //     firstName,
-    //     lastName,
-    //     age,
-    //     address,
-    //     // images
-    //   },
-    //   { new: true },
-    // );
+    const update = await this.profileModel.findByIdAndUpdate(
+      { _id: findData._id },
+      {
+        avatar: avatar1,
+        firstName,
+        lastName,
+        age,
+        address,
+        images,
+      },
+      { new: true },
+    );
 
-    // return update;
+    return update;
   }
 
   //NOTE - Delete
   async remove(request: any) {
-    try {
-      const data = request.user;
-      const findData = await this.profileModel.findOne({
-        $or: [{ userId: data.sub, email: data.email }],
-      });
+    const data = request.user;
 
-      const findUser = await this.userModel.findOne({
-        $or: [{ userId: data.sub, email: data.email }],
-      });
+    const findData = await this.profileModel.findOne({
+      $or: [{ userId: data.sub, email: data.email }],
+    });
 
-      const result = await this.profileModel.findByIdAndDelete(
-        { _id: findData._id },
-        { _id: findUser._id },
-      );
-      if (!result) {
-        throw new NotFoundException(`Product with Id  not found`);
-      }
+    const findUser = await this.userModel.findOne({email: data.email,});
 
-      return result;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'An error occurred during deletion',
-      );
+
+    if (!findData || !findUser) {
+      throw new NotFoundException(`Profile or User not found`);
     }
+
+    if (findData._id && findUser._id) {
+      const deleteProfile = await this.profileModel.findByIdAndDelete(findData._id);
+      const deleteUser = await this.userModel.findByIdAndDelete(findUser._id);
+
+      return { deletedProfile: deleteProfile, deletedUser: deleteUser };
+    }
+
   }
 }

@@ -47,25 +47,8 @@ export class ProfileController {
   }
   
 
-/**
- * 
- * @param req 
- * @param signUpDto 
- * @param files 
- * @returns 
- */
-  @Put('images')
-  @UseInterceptors(FilesInterceptor('images'))
-  uploadMany(@Req() request:Request,/*@Body() signUpDto:SignUpDto ,*/@UploadedFiles() files: Array<Express.Multer.File>){
-    return this.profileService.upload(request,/*signUpDto,*/files)
-  }
 
-  @Put('avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
-  async updateAvatar(@Req() request:Request, @UploadedFile() file:Express.Multer.File){
-    return await this.profileService.updateAvatar(request,file)
-    
-  }
+
 
 
 }
