@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Types } from 'mongoose';
+import mongoose, { Types,Document } from 'mongoose';
 
 @Schema()
-export class Profile {
+export class Profile extends Document {
 
   @Prop()
   userId: string;
@@ -36,3 +36,5 @@ export class Profile {
 }
 
 export const ProfileSchema = SchemaFactory.createForClass(Profile);
+
+// export const ProfileModel = mongoose.model(Profile.name,ProfileSchema)

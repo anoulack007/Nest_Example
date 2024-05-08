@@ -1,9 +1,6 @@
 import {
   BadRequestException,
-  HttpCode,
-  HttpStatus,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -14,6 +11,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SignUpDto } from 'src/User/dto/signup.dto';
 import { User } from 'src/User/schema/User.schema';
+import * as fs from 'fs';
+import { existsSync, unlinkSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
 @Injectable()
 export class ProfileService {
@@ -55,7 +59,6 @@ export class ProfileService {
     return PicMany;
   }
 
-
   //NOTE - Create Profile
   // async create(userId: string, createProfileDto: CreateProfileDto) {
   //   console.log({ userId, createProfileDto });
@@ -83,20 +86,41 @@ export class ProfileService {
   async update(request: any, updateProfileDto: UpdateProfileDto, files: any) {
     const data = request.user;
     const images = [];
-    const avatar = files.avatar;
-    const avatar1 = avatar[0].originalname;
+    let avatar1;
 
     const { firstName, lastName, age, address } = updateProfileDto;
 
     const findData = await this.profileModel.findOne({
       $or: [{ userId: data.sub }, { email: data.email }],
     });
+
+
     if (!findData) {
       throw new UnauthorizedException('Yeah Bro');
     }
 
-    for (const i of files.images) {
-      images.push(i.originalname);
+    if (files.images) {
+      for (const i of findData.images) {
+        if (existsSync('./src/Images/' + i)) {
+          unlinkSync('./src/Images/' + i);
+          console.log('Delete Success');
+        } else {
+          console.log('File not found');
+        }
+      }
+
+      for (const i of files.images) {
+        images.push(i.originalname);
+      }
+    }
+    if (files.avatar) {
+      avatar1 = files.avatar[0].originalname;
+      if (existsSync('./src/Images/' + findData.avatar)) {
+        unlinkSync('./src/Images/' + findData.avatar);
+        console.log('Delete Success');
+      } else {
+        console.log('File not found');
+      }
     }
 
     const update = await this.profileModel.findByIdAndUpdate(
@@ -111,6 +135,8 @@ export class ProfileService {
       },
       { new: true },
     );
+    
+
 
     return update;
   }
@@ -119,23 +145,47 @@ export class ProfileService {
   async remove(request: any) {
     const data = request.user;
 
-    const findData = await this.profileModel.findOne({
+    const findProfile = await this.profileModel.findOne({
       $or: [{ userId: data.sub, email: data.email }],
     });
 
-    const findUser = await this.userModel.findOne({email: data.email,});
+    const findUser = await this.userModel.findOne({ email: data.email });
 
-
-    if (!findData || !findUser) {
+    if (!findProfile || !findUser) {
       throw new NotFoundException(`Profile or User not found`);
     }
 
-    if (findData._id && findUser._id) {
-      const deleteProfile = await this.profileModel.findByIdAndDelete(findData._id);
-      const deleteUser = await this.userModel.findByIdAndDelete(findUser._id);
-
-      return { deletedProfile: deleteProfile, deletedUser: deleteUser };
+    for (const i of findProfile.images) {
+      if (existsSync('./src/Images/'+ i)) {
+        unlinkSync('./src/Images/' + i);
+        console.log('Delete Success');
+      } else {
+        console.log('File Not Found');
+      }
     }
 
+    if (existsSync('./src/Images/' + findProfile.images)) {
+      console.log(findProfile.images);
+      unlinkSync('./src/Images/' + findProfile.images);
+      console.log('Delete Success');
+    } else {
+      console.log('File not found');
+    }
+
+    if (existsSync('./src/Images/' + findProfile.avatar)) {
+      unlinkSync('./src/Images/' + findProfile.avatar);
+      console.log('Delete Success');
+    } else {
+      console.log('File not found');
+    }
+
+    if (findProfile._id && findUser._id) {
+    const deleteProfile = await this.profileModel.findByIdAndDelete(
+      findProfile._id,
+    );
+    const deleteUser = await this.userModel.findByIdAndDelete(findUser._id);
+
+    return { deletedProfile: deleteProfile, deletedUser: deleteUser };
+    }
   }
 }
