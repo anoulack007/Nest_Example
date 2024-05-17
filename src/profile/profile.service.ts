@@ -59,13 +59,6 @@ export class ProfileService {
     return PicMany;
   }
 
-  //NOTE - Create Profile
-  // async create(userId: string, createProfileDto: CreateProfileDto) {
-  //   console.log({ userId, createProfileDto });
-  //   const createProfile = await this.profileModel.create({
-  //     userId,
-  //     createProfileDto,
-  //   });
 
   //   return createProfile;
   // }

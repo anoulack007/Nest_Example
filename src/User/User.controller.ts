@@ -17,14 +17,14 @@ export class UserController {
             ){}
 
 
-    @Delete(':id')
-    async remove(
-        @Param('id')id:string
-    ){
-        const removes = await this.userService.deleteUser(id)
+    // @Delete(':id')
+    // async remove(
+    //     @Param('id')id:string
+    // ){
+    //     const removes = await this.userService.deleteUser(id)
 
-        return removes
-    }
+    //     return removes
+    // }
 
     @Post('upload')
     @UseInterceptors(FileInterceptor('image',{

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Types,Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 @Schema()
 export class Profile extends Document {
@@ -34,7 +34,6 @@ export class Profile extends Document {
   @Prop({default:Date.now})
   updatedAt:Date
 }
-
 export const ProfileSchema = SchemaFactory.createForClass(Profile);
 
 // export const ProfileModel = mongoose.model(Profile.name,ProfileSchema)

@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   MongooseModuleOptions,
@@ -6,6 +6,7 @@ import {
 } from '@nestjs/mongoose';
 import {
 } from '@nestjs/platform-express';
+import { PrismaClient } from '@prisma/client';
 
 
 //NOTE - MongoDb connection
@@ -21,17 +22,8 @@ export class MongoosesConfigService implements MongooseOptionsFactory {
   }
 }
 
-export class FileValidatorService {
-  validateFile(file: any): boolean {
-    // Custom validation logic
-    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      throw new Error('Only image files are allowed!');
-    }
-    if (file.size > 1024 * 1024) {
-      throw new Error('File size should be less than 1MB');
-    }
-    return true;
-  }
-}
+
+
+
 
 

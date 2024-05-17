@@ -5,11 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Profile, ProfileSchema } from './schemas/profile.schema';
 import { UserService } from 'src/User/User.service';
 import { UserSchema } from 'src/User/schema/User.schema';
-import { MulterModule, MulterOptionsFactory } from '@nestjs/platform-express';
+import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
 import { ConfigModule } from '@nestjs/config';
-import { FileValidatorService } from 'src/app.service';
+
 
 @Module({
   controllers: [ProfileController],
